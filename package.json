@@ -1,0 +1,11 @@
+{
+  "name": "slack-hooks",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:r-nyknicks-moderators/slack-hooks.git",
+  "author": "Brendan <eggers.brendan@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "snoowrap": "^1.21.0"
+  }
+}
