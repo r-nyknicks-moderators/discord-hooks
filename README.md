@@ -7,3 +7,4 @@
 - [ ] Check for bad comments
 - [ ] Trade posts will alert us. Eventually can check the quality of the trade
 - [ ] Article posted from non whitelisted sites
+- [ ] Check comment stream for the word mods. Maybe suggest sub to use a keyword to ping us
