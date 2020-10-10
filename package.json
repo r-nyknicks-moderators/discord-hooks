@@ -6,6 +6,7 @@
   "author": "Brendan <eggers.brendan@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "mongodb": "^3.6.2",
     "snoowrap": "^1.21.0"
   }
 }
