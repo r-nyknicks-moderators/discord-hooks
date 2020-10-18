@@ -1,5 +1,6 @@
 const snoowrap = require('snoowrap');
-const { connectToDatabase } = require('../database');
+const { connectToDatabase, closeConnection } = require('../database');
+const { fireNewReportHook } = require('../discord');
 const { client_id, client_secret, username, password, subreddit } = require('../secrets.json');
 
 const reddit = new snoowrap({
@@ -10,19 +11,32 @@ const reddit = new snoowrap({
   password,
 });
 
-
-const insertReportedItem = async (collection, insertItem) => {
-  await collection.insertOne(insertItem, { forceServerObjectId: false });
+/**
+ * 
+ * @param {object} collection - Database Collection
+ * @param {boolean} isSubmission - The boolean value of whether or not the reported item is a submission or comment 
+ * @param {object} newReport - Reported Item Information
+ */
+const insertReportedItem = async (collection, isSubmission, newReport) => {
+  const { id, author, permalink } = newReport;
+  // Throw new item in the DB
+  await collection.insertOne({ _id: id, author: author.name, permalink, isSubmission }, { forceServerObjectId: false });
+  // Send discord message that it's a newly reported item
+  return fireNewReportHook(isSubmission, newReport);
 }
 
-
+/**
+ * 
+ * @param {array} modqueue - Array of items that need to be moderated
+ */
 const checkForNewReports = async (modqueue) => {
   const collection = await connectToDatabase('reported_items');
-  modqueue.forEach(async (reported_item) => {
-    const { id, author } = reported_item;
+  return modqueue.forEach(async (reported_item) => {
+    // Changing reported ID key to be _id to match MongoDB value
+    const { id: _id } = reported_item;
     const isSubmission = Boolean(reported_item.comments);
-    const isReportInDB = await collection.findOne({ id });
-    if(!isReportInDB) await insertReportedItem(collection, { id, author: author.name, isSubmission });
+    const isReportInDB = await collection.findOne({ _id });
+    if(!isReportInDB) await insertReportedItem(collection, isSubmission, { ...reported_item });
     // if reported item is already in the database, just ignore and move on
     return;
   }); 
@@ -31,12 +45,10 @@ const checkForNewReports = async (modqueue) => {
 
 /**
  * Starts the scan process of checking for new reported items
- * @param {object} client - The Database object
  */
 const startReportScan = async () => {
   const modqueue = await reddit.getSubreddit(subreddit).getModqueue();
   if(modqueue.length > 0) await checkForNewReports(modqueue);
-  else console.log('No new reports, closing');
 }
 
 

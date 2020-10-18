@@ -6,6 +6,7 @@
   "author": "Brendan <eggers.brendan@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "discord-webhook-node": "^1.1.8",
     "mongodb": "^3.6.2",
     "ramda": "^0.27.1",
     "snoowrap": "^1.21.0"
