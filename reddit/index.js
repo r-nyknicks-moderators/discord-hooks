@@ -49,6 +49,7 @@ const checkForNewReports = async (modqueue) => {
 const startReportScan = async () => {
   const modqueue = await reddit.getSubreddit(subreddit).getModqueue();
   if(modqueue.length > 0) await checkForNewReports(modqueue);
+  else console.log('nothing there. Script complete');
 }
 
 

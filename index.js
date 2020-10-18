@@ -2,5 +2,7 @@ const { startReportScan } = require('./reddit');
 const { closeConnection } = require('./database');
 
 (async function() {
-  await startReportScan();
+  setInterval(async () => {
+    await startReportScan();
+  }, 60000);
 })();
