@@ -1,20 +1,16 @@
-const { db_url, db_name } = require('../secrets.json');
+const { db_url, subreddit } = require('../secrets.json');
 const { MongoClient } = require('mongodb');
 
-const listDatabases = async (client) => {
-  const databaseList = await client.db().admin().listDatabases();
-  console.log('Databases');
-  databaseList.databases.forEach(db => console.log(db));
-}
 
-const connectToDatabase = async () => {
-  const uri = `${db_url}/${db_name}`;
+const connectToDatabase = async (collectionName) => {
+  const uri = `${db_url}/${subreddit}`;
   const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true }); 
+  console.log(`\n ========= OPENING CONNECTION ========= \n`)
   try {
     await client.connect();
+    return await client.db(subreddit).collection(collectionName);
   } catch(e) {
     console.error(e);
-  } finally {
     await client.close();
   }
 }
