@@ -3,7 +3,6 @@ const { webhook_url } = require('../secrets.json');
 
 const hook = new Webhook(webhook_url);
 
-
 const fireNewReportHook = async (isSubmission, reported_item) => {
   const { permalink, author, title, body } = reported_item;
   const messageText = isSubmission ? title : body;
@@ -14,8 +13,8 @@ const fireNewReportHook = async (isSubmission, reported_item) => {
     .addField(author.name, messageText);
 
   hook.send(embed);
-}
+};
 
 module.exports = {
   fireNewReportHook,
-}
+};

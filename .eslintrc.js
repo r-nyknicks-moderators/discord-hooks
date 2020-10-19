@@ -1,4 +1,4 @@
 module.exports = {
-  extends: 'eslint:recommened',
+  extends: ['eslint:recommened'],
   root: true,
 }
