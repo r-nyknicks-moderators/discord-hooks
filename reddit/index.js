@@ -35,10 +35,10 @@ const checkForNewReports = async (modqueue) => {
     // Changing reported ID key to be _id to match MongoDB value
     const { id: _id } = reported_item;
     const isSubmission = Boolean(reported_item.comments);
-    const isReportInDB = await collection.findOne({ _id });
+    const isReportInDB = await Boolean(collection.findOne({ _id }));
     if(!isReportInDB) await insertReportedItem(collection, isSubmission, { ...reported_item });
     // if reported item is already in the database, just ignore and move on
-    return;
+    return console.log('modqueue filled with old reports');
   }); 
 }
 
@@ -49,7 +49,7 @@ const checkForNewReports = async (modqueue) => {
 const startReportScan = async () => {
   const modqueue = await reddit.getSubreddit(subreddit).getModqueue();
   if(modqueue.length > 0) await checkForNewReports(modqueue);
-  else console.log('nothing there. Script complete');
+  return console.log('nothing there. Script complete');
 }
 
 
