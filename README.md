@@ -9,3 +9,4 @@
 - [ ] Article posted from non whitelisted sites
 - [ ] Check comment stream for the word mods. Maybe suggest sub to use a keyword to ping us
 - [ ] Make sure Athletic articles don't get copied and pasted
+- [ ] Keep track of quality posts, and try to reward those
