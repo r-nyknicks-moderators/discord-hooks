@@ -1,5 +1,5 @@
 const { Webhook, MessageBuilder } = require('discord-webhook-node');
-const { webhook_url } = require('../secrets.json');
+const webhook_url = process.env.WEBHOOK_URL;
 
 const hook = new Webhook(webhook_url);
 

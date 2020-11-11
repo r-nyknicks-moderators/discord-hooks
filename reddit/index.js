@@ -1,5 +1,5 @@
 const snoowrap = require('snoowrap');
-const { connectToDatabase } = require('../database');
+
 const { fireNewReportHook } = require('../discord');
 const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
