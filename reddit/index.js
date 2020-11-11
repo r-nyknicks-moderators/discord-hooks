@@ -1,18 +1,16 @@
 const snoowrap = require('snoowrap');
 const { connectToDatabase } = require('../database');
 const { fireNewReportHook } = require('../discord');
-const {
-  client_id,
-  client_secret,
-  subreddit,
-  refresh_token,
-} = require('../secrets.json');
+const clientId = process.env.CLIENT_ID;
+const clientSecret = process.env.CLIENT_SECRET;
+const refreshToken = process.env.REFRESH_TOKEN;
+const subreddit = process.env.SUBREDDIT;
 
 const reddit = new snoowrap({
   userAgent: 'knicksbot',
-  clientId: client_id,
-  clientSecret: client_secret,
-  refreshToken: refresh_token,
+  clientId,
+  clientSecret,
+  refreshToken,
 });
 
 /**
@@ -51,7 +49,7 @@ const insertReportedItem = async (collection, isSubmission, reportData) => {
  * @param {array} modqueue - Array of items that need to be moderated
  */
 const checkForNewReports = async (modqueue) => {
-  console.log(modqueue);
+  console.log(modqueue.length);
   // const collection = await connectToDatabase('reported_items');
   // return modqueue.forEach(async (reported_item) => {
   //   // Changing reported ID key to be _id to match MongoDB value
@@ -79,10 +77,12 @@ const checkForNewReports = async (modqueue) => {
 /**
  * Starts the scan process of checking for new reported items
  */
-const startReportScan = async () => {
-  const modqueue = await reddit.getSubreddit(subreddit).getModqueue();
-  if (modqueue.length > 0) return await checkForNewReports(modqueue);
-  return console.log('nothing there. Script complete');
+const startReportScan = () => {
+  return new Promise(async (resolve, reject) => {
+    const modqueue = await reddit.getSubreddit(subreddit).getModqueue();
+    if (modqueue.length > 0) return resolve(await checkForNewReports(modqueue));
+    return reject(console.log('nothing there. Script complete'));
+  });
 };
 
 module.exports = {
