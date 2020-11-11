@@ -12,7 +12,8 @@ const fireNewReportHook = async (isSubmission, reported_item) => {
     .setURL(`https://reddit.com${permalink}`)
     .addField(author.name, messageText);
 
-  hook.send(embed);
+  console.log(embed);
+  // hook.send(embed);
 };
 
 module.exports = {

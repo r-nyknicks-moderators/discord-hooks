@@ -1,20 +1,18 @@
 const snoowrap = require('snoowrap');
-const { connectToDatabase, closeConnection } = require('../database');
+const { connectToDatabase } = require('../database');
 const { fireNewReportHook } = require('../discord');
 const {
   client_id,
   client_secret,
-  username,
-  password,
   subreddit,
+  refresh_token,
 } = require('../secrets.json');
 
 const reddit = new snoowrap({
   userAgent: 'knicksbot',
   clientId: client_id,
   clientSecret: client_secret,
-  username,
-  password,
+  refreshToken: refresh_token,
 });
 
 /**
@@ -53,28 +51,29 @@ const insertReportedItem = async (collection, isSubmission, reportData) => {
  * @param {array} modqueue - Array of items that need to be moderated
  */
 const checkForNewReports = async (modqueue) => {
-  const collection = await connectToDatabase('reported_items');
-  return modqueue.forEach(async (reported_item) => {
-    // Changing reported ID key to be _id to match MongoDB value
-    const { id: _id } = reported_item;
-    const isSubmission = Boolean(reported_item.comments);
-    const foundReportedItem = await collection.findOne({ _id });
+  console.log(modqueue);
+  // const collection = await connectToDatabase('reported_items');
+  // return modqueue.forEach(async (reported_item) => {
+  //   // Changing reported ID key to be _id to match MongoDB value
+  //   const { id: _id } = reported_item;
+  //   const isSubmission = Boolean(reported_item.comments);
+  //   const foundReportedItem = await collection.findOne({ _id });
 
-    // Check if the item exists. If it does not, send message and add it
-    if (!Boolean(foundReportedItem))
-      return await insertReportedItem(collection, isSubmission, {
-        ...reported_item,
-      });
-    // If it does exist, maybe it missed a message so we have to send a new one and update the object
-    if (Boolean(foundReportedItem) && !foundReportedItem.messageSent) {
-      return await insertReportedItem(collection, isSubmission, {
-        ...reported_item,
-      });
-    }
+  //   // Check if the item exists. If it does not, send message and add it
+  //   if (!Boolean(foundReportedItem))
+  //     return await insertReportedItem(collection, isSubmission, {
+  //       ...reported_item,
+  //     });
+  //   // If it does exist, maybe it missed a message so we have to send a new one and update the object
+  //   if (Boolean(foundReportedItem) && !foundReportedItem.messageSent) {
+  //     return await insertReportedItem(collection, isSubmission, {
+  //       ...reported_item,
+  //     });
+  //   }
 
-    // if reported item is already in the database and sent, just ignore and move on
-    return;
-  });
+  //   // if reported item is already in the database and sent, just ignore and move on
+  //   return;
+  // });
 };
 
 /**
