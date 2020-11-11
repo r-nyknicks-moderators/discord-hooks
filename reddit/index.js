@@ -1,6 +1,6 @@
 const snoowrap = require('snoowrap');
 
-const { fireNewReportHook } = require('../discord');
+// const { fireNewReportHook } = require('../discord');
 const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
 const refreshToken = process.env.REFRESH_TOKEN;
@@ -19,30 +19,30 @@ const reddit = new snoowrap({
  * @param {boolean} isSubmission - The boolean value of whether or not the reported item is a submission or comment
  * @param {object} newReport - Reported Item Information
  */
-const insertReportedItem = async (collection, isSubmission, reportData) => {
-  const { id, author, permalink } = reportData;
-  let success = false;
-  try {
-    await fireNewReportHook(isSubmission, reportData);
-    success = true;
-  } catch (error) {
-    success = false;
-  }
-  // Throw new item in the DB
-  return await collection.findOneAndUpdate(
-    { _id: id },
-    {
-      $set: {
-        _id: id,
-        author: author.name,
-        permalink,
-        isSubmission,
-        messageSent: success,
-      },
-    },
-    { upsert: true },
-  );
-};
+// const insertReportedItem = async (collection, isSubmission, reportData) => {
+//   const { id, author, permalink } = reportData;
+//   let success = false;
+//   try {
+//     await fireNewReportHook(isSubmission, reportData);
+//     success = true;
+//   } catch (error) {
+//     success = false;
+//   }
+//   // Throw new item in the DB
+//   return await collection.findOneAndUpdate(
+//     { _id: id },
+//     {
+//       $set: {
+//         _id: id,
+//         author: author.name,
+//         permalink,
+//         isSubmission,
+//         messageSent: success,
+//       },
+//     },
+//     { upsert: true },
+//   );
+// };
 
 /**
  *
