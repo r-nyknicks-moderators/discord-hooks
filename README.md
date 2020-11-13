@@ -43,9 +43,9 @@ On Reddit, you should have been added to the application as a developer. [Check 
 
 ---
 
-Use this [tool to get your refresh token](https://github.com/not-an-aardvark/reddit-oauth-helper) for the application
-Use the credentials given over discord to connect the application to your Reddit Account (allow all scopes)
-Copy the output (in the browser or in the terminal)
+Use this [tool to get your refresh token](https://github.com/not-an-aardvark/reddit-oauth-helper) for the application to connect the application to your Reddit Account (allow all scopes)
+
+Copy the output (in the browser or in the terminal) and update the `.env` file accordingly
 You can always get another set of this information by re-authorizing the application
 
 At this point, you should be able to run `npm install` in the repo
