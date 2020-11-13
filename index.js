@@ -1,9 +1,11 @@
+const express = require('express');
 const dotenv = require('dotenv');
+const app = express();
 dotenv.config();
 const { startReportScan } = require('./reddit');
 
-(async function () {
-  setInterval(async () => {
-    await startReportScan();
-  }, 60000);
-})();
+const port = process.env.PORT || 5000;
+
+app.listen(port, async () => {
+  await startReportScan();
+});
