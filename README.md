@@ -55,9 +55,14 @@ If it doesn't work, provide error message output in Discord so we can debug.
 
 ## Workflow
 
+Take a look at the [board on Github](https://github.com/r-nyknicks-moderators/discord-hooks/projects/1). Grab a ticket and start going.
+
+ClydeEdgar will handle the infrastructure stuff so please leave those ones for now. He will handle any potential financial things that may arise from hosting/db stuff
+
 Create a feature branch - username/description [eggdev/capturing-reports]
 
-Do your work locally. Commit your code often. Use the [conventional commit format](conventionalcommits.org). I haven't done it start the repo but will be doing so going forward. It's good practice
+Do your work locally. Commit your code often. Use the [conventional commit format](conventionalcommits.org). I haven't done it to start the repo but will be doing so going forward. It's good practice in general
 
 When you're ready to submit a PR, open one on Github, request review from the team.
-Once the work is approved it you can merge into master and it will trigger a deploy
+
+Once the work is approved it you can squash and merge into master and it will trigger a deploy
