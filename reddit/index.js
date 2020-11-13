@@ -1,13 +1,6 @@
 const snoowrap = require('snoowrap');
 const { connectToDatabase, closeConnection } = require('../database');
 const { sendHook, fireNewReportHook } = require('../discord');
-const {
-  client_id,
-  client_secret,
-  username,
-  password,
-  subreddit,
-} = require('../secrets.json');
 
 const reddit = new snoowrap({
   userAgent: 'knicksbot',
