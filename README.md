@@ -24,7 +24,7 @@ Once you've done that, we will want to make sure the machine has all of the requ
 
 You should have git installed, if you don't, [install it](https://www.atlassian.com/git/tutorials/install-git)
 
-Install Node.js - I have 15.0.1 but you should be able to use anything above 12 without issues
+Install Node.js - I have 15.0.1 but you should be able to use anything above 12 without issues. Heroku uses 12.9 which is where our app will live.
 
 Use this [tool to get your refresh token](https://github.com/not-an-aardvark/reddit-oauth-helper) for the application
 Use the credentials given over discord to connect the application to your Reddit Account (allow all scopes)

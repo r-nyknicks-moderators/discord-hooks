@@ -50,6 +50,7 @@ const reddit = new snoowrap({
  */
 const checkForNewReports = async (modqueue) => {
   console.log(modqueue.length);
+  // return new Promise(async (resolve, reject) => {});
   // const collection = await connectToDatabase('reported_items');
   // return modqueue.forEach(async (reported_item) => {
   //   // Changing reported ID key to be _id to match MongoDB value
@@ -81,7 +82,7 @@ const startReportScan = () => {
   return new Promise(async (resolve, reject) => {
     const modqueue = await reddit.getSubreddit(subreddit).getModqueue();
     if (modqueue.length > 0) return resolve(await checkForNewReports(modqueue));
-    return reject(console.log('nothing there. Script complete'));
+    return reject(false);
   });
 };
 
