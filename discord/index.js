@@ -14,16 +14,19 @@ const sendHook = async (title, url, fields) => {
 
     hook.send(embed);
 
+    return true;
+
 }
 
 const fireNewReportHook = async (isSubmission, reported_item) => {
   const { permalink, author, title, body } = reported_item;
   const messageText = isSubmission ? title : body;
 
-  sendHook(`${isSubmission ? 'Post' : 'Comment'} Reported`,
-   `https://reddit.com${permalink}`, {author.name: messageText})
+  return sendHook(`${isSubmission ? 'Post' : 'Comment'} Reported`,
+   `https://reddit.com${permalink}`, {author.name: messageText});
 };
 
 module.exports = {
+  sendHook,
   fireNewReportHook,
 };

@@ -1,6 +1,6 @@
 const snoowrap = require('snoowrap');
 const { connectToDatabase, closeConnection } = require('../database');
-const { fireNewReportHook } = require('../discord');
+const { sendHook, fireNewReportHook } = require('../discord');
 const {
   client_id,
   client_secret,
@@ -16,6 +16,20 @@ const reddit = new snoowrap({
   username,
   password,
 });
+
+/**
+ *
+ * @param {string} url - Url to be checked against mongodb list
+ * @returns {boolean} - The boolean value of whether or not the link is allowed
+ */
+const checkLink = async(url) => {
+  let linksCollection = await connectToDatabase("disallowed_links");
+  let linksList await linksCollection.distinct("domain");
+
+  if (linksList.includes(url.toLowerCase())) return false;
+  return true;
+}
+
 
 /**
  *
@@ -59,6 +73,14 @@ const checkForNewReports = async (modqueue) => {
     const { id: _id } = reported_item;
     const isSubmission = Boolean(reported_item.comments);
     const foundReportedItem = await collection.findOne({ _id });
+
+    let linkAllowed = await checkLink(reported_item.url)
+    if (!linkAllowed) {
+      sendHook("Disallowed Link Posted",
+       `https://reddit.com${reported_item.permalink}`, {
+       "Site linked to": reported_item.url
+      });
+    }
 
     // Check if the item exists. If it does not, send message and add it
     if (!Boolean(foundReportedItem))
