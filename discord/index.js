@@ -1,28 +1,28 @@
-const sendHook = async (title, url, fields) => {
-    const embed = new MessageBuilder()
-      .setTitle(title)
-      .setURL(url);
+// const sendHook = async (title, url, fields) => {
+//     const embed = new MessageBuilder()
+//       .setTitle(title)
+//       .setURL(url);
 
-    for (let title in fields) {
-        embed.addField(title, fields[title]);
-    }
+//     for (let title in fields) {
+//         embed.addField(title, fields[title]);
+//     }
 
-    hook.send(embed);
+//     hook.send(embed);
 
-    return true;
+//     return true;
 
-}
+// }
 
-const fireNewReportHook = async (isSubmission, reported_item) => {
-  const { permalink, author, title, body } = reported_item;
-  const messageText = isSubmission ? title : body;
+// const fireNewReportHook = async (isSubmission, reported_item) => {
+//   const { permalink, author, title, body } = reported_item;
+//   const messageText = isSubmission ? title : body;
 
-  return sendHook(`${isSubmission ? 'Post' : 'Comment'} Reported`,
-   `https://reddit.com${permalink}`, {author.name: messageText});
-};
+//   return sendHook(`${isSubmission ? 'Post' : 'Comment'} Reported`,
+//    `https://reddit.com${permalink}`, {author.name: messageText});
+// };
 
-module.exports = {
-  sendHook,
-  fireNewReportHook,
-};
+// module.exports = {
+//   sendHook,
+//   fireNewReportHook,
+// };
 
