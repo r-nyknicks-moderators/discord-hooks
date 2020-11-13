@@ -2,12 +2,17 @@ const snoowrap = require('snoowrap');
 const { connectToDatabase, closeConnection } = require('../database');
 const { sendHook, fireNewReportHook } = require('../discord');
 
+// const { fireNewReportHook } = require('../discord');
+const clientId = process.env.CLIENT_ID;
+const clientSecret = process.env.CLIENT_SECRET;
+const refreshToken = process.env.REFRESH_TOKEN;
+const subreddit = process.env.SUBREDDIT;
+
 const reddit = new snoowrap({
   userAgent: 'knicksbot',
-  clientId: client_id,
-  clientSecret: client_secret,
-  username,
-  password,
+  clientId,
+  clientSecret,
+  refreshToken,
 });
 
 /**
@@ -90,15 +95,17 @@ const checkForNewReports = async (modqueue) => {
     // if reported item is already in the database and sent, just ignore and move on
     return;
   });
-};
+
 
 /**
  * Starts the scan process of checking for new reported items
  */
-const startReportScan = async () => {
-  const modqueue = await reddit.getSubreddit(subreddit).getModqueue();
-  if (modqueue.length > 0) return await checkForNewReports(modqueue);
-  return console.log('nothing there. Script complete');
+const startReportScan = () => {
+  return new Promise(async (resolve, reject) => {
+    const modqueue = await reddit.getSubreddit(subreddit).getModqueue();
+    if (modqueue.length > 0) return resolve(await checkForNewReports(modqueue));
+    return reject(false);
+  });
 };
 
 module.exports = {

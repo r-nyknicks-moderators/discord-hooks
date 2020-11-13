@@ -1,8 +1,3 @@
-const { Webhook, MessageBuilder } = require('discord-webhook-node');
-const { webhook_url } = require('../secrets.json');
-
-const hook = new Webhook(webhook_url);
-
 const sendHook = async (title, url, fields) => {
     const embed = new MessageBuilder()
       .setTitle(title)
@@ -30,3 +25,4 @@ module.exports = {
   sendHook,
   fireNewReportHook,
 };
+
