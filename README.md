@@ -29,14 +29,16 @@ You should have git installed, if you don't, [install it](https://www.atlassian.
 [Install Node.js](https://changelog.com/posts/install-node-js-with-homebrew-on-os-x)
 
 - I have 15.0.1 but you should be able to use anything above 12 without issues.
+- There is a world where we will need 15.0.1 and npm v7 to integrate with workspaces, but we're not there yet
 - Heroku uses 12.9 which is where our app will live for now
 
 If you have not created a Heroku account, please do so.
 Once you have an account, send ClydeEdgar a DM on Discord with your email address you used so I can add you as a memeber of the project
 
-[Install Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) - Don't use the command `heroku push origin master`. We're going to have restrictions on deploying soon. It'll only deploy from merges into the master branch.
+[Install Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
+Follow the steps to log in from your terminal
 
-You should have been added to the application as a developer. [Check Here](https://www.reddit.com/prefs/apps) and gather the client ID and secret. Add them in the appropriate place in the .env file
+On Reddit, you should have been added to the application as a developer. [Check Here](https://www.reddit.com/prefs/apps) and gather the client ID and secret. Add them in the appropriate place in the .env file
 <img src="https://justinstolpe.com/blog/wp-content/uploads/2019/01/testappedited.png" height=250 width=600 />
 
 ---
@@ -55,7 +57,7 @@ If it doesn't work, provide error message output in Discord so we can debug.
 
 Create a feature branch - username/description [eggdev/capturing-reports]
 
-Do your work. Commit early and often.
+Do your work locally. Commit your code often. Use the [conventional commit format](conventionalcommits.org). I haven't done it start the repo but will be doing so going forward. It's good practice
 
 When you're ready to submit a PR, open one on Github, request review from the team.
 Once the work is approved it you can merge into master and it will trigger a deploy
