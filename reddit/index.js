@@ -1,4 +1,5 @@
 const snoowrap = require('snoowrap');
+const KnicksDiscordBot = require("./discord");
 
 // const { fireNewReportHook } = require('../discord');
 const clientId = process.env.CLIENT_ID;
