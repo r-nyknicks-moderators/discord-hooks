@@ -9,8 +9,10 @@ const subreddit = process.env.SUBREDDIT;
 
 //Temporary until db is running
 const linksList = [
-  "twitter.com"
+  
 ]
+
+//ID to flag posts
 const BAD_SOURCE_FLAIR_ID = "c714d6ce-25ee-11eb-8a01-0e3bb7b07d89";
 
 const reddit = new snoowrap({
@@ -20,6 +22,19 @@ const reddit = new snoowrap({
   refreshToken,
 });
 
+/**
+ * Function to handle the commands the discord bot is given
+ *
+ * @param      {Message}  ctx      The context
+ * @param      {Array}  args     The arguments
+ * @param      {Return value}  result   The result
+ * @param      {Command}  command  The command
+ */
+const handleDiscordCommands = async (ctx, args, result, command) => {
+  if (command.name == "delete") {
+    return reddit.getSubmission(args[0]).delete();
+  }
+}
 
 /**
  *
@@ -41,21 +56,27 @@ const checkForNewReports = async (modqueue) => {
 
     //Run checks on submissions
     if (isSubmission) {
+      //TODO (Callum) : Check whether flair is already assigned
       let linkAllowed = await checkLink(reported_item.url);
       // Assign bad source flair to invalid sources
       if (!linkAllowed) {
-        debugger;
-        reported_item.selectFlair({flair_template_id: BAD_SOURCE_FLAIR_ID})
+        reported_item.selectFlair({flair_template_id: BAD_SOURCE_FLAIR_ID});
         KnicksDiscordBot.channels.cache.get(process.env.BOT_SEND_CHANNEL)
         .send({"embed": {
           title:"Bad source found",
           url: `https://reddit.com${reported_item.permalink}`,
           description: "A post with a bad source has been reported",
-          fields: [{
+          fields: [
+          {
             name: "Url reported:",
             value: reported_item.url
-          }],
-          timestamp: new Date()
+          },
+          {
+            name: "Post ID",
+            value: reported_item.id
+          }
+          ],
+          timestamp: new Date(reported_item.created_utc * 1000)
         }});
       }    
     }
@@ -74,6 +95,11 @@ const startReportScan = () => {
     return reject(false);
   });
 };
+
+//Set up discord handler
+KnicksDiscordBot.commandCollection.on(
+  "ran", handleDiscordCommands);
+
 
 module.exports = {
   reddit,
