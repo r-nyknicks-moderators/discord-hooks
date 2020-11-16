@@ -9,7 +9,7 @@ const subreddit = process.env.SUBREDDIT;
 
 //Temporary until db is running
 const linksList = [
-  
+
 ]
 
 //ID to flag posts
