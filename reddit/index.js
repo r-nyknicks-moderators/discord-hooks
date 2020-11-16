@@ -9,7 +9,6 @@ const subreddit = process.env.SUBREDDIT;
 
 //Temporary until db is running
 const linksList = [
-  "twitter.com"
 ]
 const BAD_SOURCE_FLAIR_ID = "c714d6ce-25ee-11eb-8a01-0e3bb7b07d89";
 
