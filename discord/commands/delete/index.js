@@ -5,7 +5,7 @@ module.exports = class DeletePost extends Command {
         super(
             "delete",
             ["id"],
-            []
+            ["ADMINISTRATOR"]
             );
     }
 
