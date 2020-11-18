@@ -11,6 +11,7 @@
     "express": "^4.17.1",
     "mongodb": "^3.6.2",
     "ramda": "^0.27.1",
+    "realm": "^10.0.1",
     "snoowrap": "^1.21.0"
   },
   "devDependencies": {
@@ -19,7 +20,7 @@
     "prettier": "^2.1.2"
   },
   "scripts": {
-    "dev": "nodemon index.js",
+    "dev": "nodemon",
     "logs": "heroku logs --app=nyknicks-reports --tail"
   }
 }
