@@ -6,14 +6,12 @@ const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
 const refreshToken = process.env.REFRESH_TOKEN;
 const subreddit = process.env.SUBREDDIT;
+const badSourceFlairID = process.env.BAD_SOURCE_FLAIR_ID;
 
 //Temporary until db is running
 const linksList = [
 
 ]
-
-//ID to flag posts
-const BAD_SOURCE_FLAIR_ID = "c714d6ce-25ee-11eb-8a01-0e3bb7b07d89";
 
 const reddit = new snoowrap({
   userAgent: 'knicksbot',
@@ -60,7 +58,7 @@ const checkForNewReports = async (modqueue) => {
       let linkAllowed = await checkLink(reported_item.url);
       // Assign bad source flair to invalid sources
       if (!linkAllowed) {
-        reported_item.selectFlair({flair_template_id: BAD_SOURCE_FLAIR_ID});
+        reported_item.selectFlair({flair_template_id: badSourceFlairID});
         KnicksDiscordBot.channels.cache.get(process.env.BOT_SEND_CHANNEL)
         .send({"embed": {
           title:"Bad source found",
