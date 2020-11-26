@@ -2,12 +2,6 @@ const snoowrap = require('snoowrap');
 const { SubmissionStream, CommentStream, ModQueueStream } = require("snoostorm");
 const { KnicksDiscordBot } = require("../discord");
 
-const clientId = process.env.CLIENT_ID;
-const clientSecret = process.env.CLIENT_SECRET;
-const refreshToken = process.env.REFRESH_TOKEN;
-const subreddit = process.env.SUBREDDIT;
-const badSourceFlairID = process.env.BAD_SOURCE_FLAIR_ID;
-
 const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
  /**
   * Constructs a new instance.
@@ -52,7 +46,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
    * @param      {Return value}  result   The result
    * @param      {Command}  command  The command
    */
-  handleDiscordCommands = async (ctx, args, result, command) => {
+  handleDiscordCommands(ctx, args, result, command) {
     if (command.name == "delete") {
       return reddit.getSubmission(args[0]).delete();
     }
