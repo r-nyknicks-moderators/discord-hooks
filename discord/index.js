@@ -4,7 +4,7 @@ const KnicksDiscordBot = class KnicksDiscordBot extends NodeJSBot {
     constructor(prefix, options = {}) {
         super(prefix, options);
         this.once("ready", () => {
-            KnicksDiscordBot.commandCollection.loadCommands(process.cwd() + "/discord/commands");
+            this.commandCollection.loadCommands(process.cwd() + "/discord/commands");
             console.log("Discord Bot ready...");
         })
     }

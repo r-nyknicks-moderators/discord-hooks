@@ -19,6 +19,8 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
       refreshToken
     });
 
+    this.subreddit = subreddit;
+
     //Temporary until database set up
     this._linksList = []
 

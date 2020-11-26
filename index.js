@@ -13,7 +13,7 @@ const refreshToken = process.env.REFRESH_TOKEN;
 const subreddit = process.env.SUBREDDIT;
 const badSourceFlairID = process.env.BAD_SOURCE_FLAIR_ID;
 
-bot = new KnicksRedditBot(clientId, clientSecret, refreshToken)
+bot = new KnicksRedditBot(clientId, clientSecret, refreshToken, subreddit)
 
 app.listen(port, async () => {
   console.log("bot is running...");
