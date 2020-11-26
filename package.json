@@ -11,7 +11,7 @@
     "mongodb": "^3.6.2",
     "nodejsdiscordbot": "^1.0.4",
     "ramda": "^0.27.1",
-    "snoostorm": "^1.5.1",
+    "snoostorm": "^1.5.2",
     "snoowrap": "^1.21.0"
   },
   "devDependencies": {
