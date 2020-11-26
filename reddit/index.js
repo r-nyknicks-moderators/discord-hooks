@@ -52,7 +52,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
    */
   handleDiscordCommands(ctx, args, result, command) {
     if (command.name == "delete") {
-      return reddit.getSubmission(args[0]).delete();
+      return this.getSubmission(args[0]).delete();
     }
   }
 
