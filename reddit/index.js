@@ -11,7 +11,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
   * @param      {string}  refreshToken             The refresh token
   * @param      {string}  [userAgent="knicksbot"]  The user agent
   */
-  constructor (clientId, clientSecret, refreshToken, subreddit, userAgent = "knicksbot") {
+  constructor (clientId, clientSecret, refreshToken, userAgent = "knicksbot") {
     super({
       userAgent,
       clientId,
@@ -27,18 +27,16 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
     //Discord bot setup
     this.discordBot = new KnicksDiscordBot(process.env.BOT_TOKEN);
     this.discordBot.initialise(process.env.BOT_TOKEN);
-    this.discordBot.commandCollection.on(
+    this..commandCollection.on(
       "ran", this.handleDiscordCommands);
 
     //Snoostorm streams setup
-    this.modQueueStream = new ModQueueStream(this, {
+    this.modQueueStream = new ModQueueStream(client, {
       subreddit,
       limit: 50,
       pollTime: 2000
     });
-    this.modQueueStream.on("item", (submission) => {
-      this.checkSubmission(submission);
-    });
+    this.modQueueStream.on("item", this.checkSubmission);
 
   }
 
@@ -79,11 +77,11 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
       //Run checks on submissions
     if (isSubmission) {
       //TODO (Callum) : Check whether flair is already assigned
-      let linkAllowed = this.checkUrl(reportedItem.url);
+      let linkAllowed = await checkLink(reportedItem.url);
       // Assign bad source flair to invalid sources
       if (!linkAllowed) {
-        reportedItem.selectFlair({flair_template_id: process.env.BAD_SOURCE_FLAIR_ID});
-        this.discordBot.channels.cache.get(process.env.BOT_SEND_CHANNEL)
+        reportedItem.selectFlair({flair_template_id: badSourceFlairID});
+        KnicksDiscordBot.channels.cache.get(process.env.BOT_SEND_CHANNEL)
         .send({"embed": {
           title:"Bad source found",
           url: `https://reddit.com${reportedItem.permalink}`,
