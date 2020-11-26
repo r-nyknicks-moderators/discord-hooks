@@ -28,7 +28,9 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
     this.discordBot = new KnicksDiscordBot(process.env.BOT_TOKEN);
     this.discordBot.initialise(process.env.BOT_TOKEN);
     this.discordBot.commandCollection.on(
-      "ran", this.handleDiscordCommands);
+      "ran", async (ctx, args, res, command) => {
+        await this.handleDiscordCommands(ctx, args, res, command);
+      });
 
     //Snoostorm streams setup
     this.modQueueStream = new ModQueueStream(this, {
@@ -36,8 +38,8 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
       limit: 50,
       pollTime: 2000
     });
-    this.modQueueStream.on("item", (submission) => {
-      this.checkSubmission(submission);
+    this.modQueueStream.on("item", async (submission) => {
+      await this.checkSubmission(submission);
     });
 
   }
@@ -50,7 +52,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
    * @param      {Return value}  result   The result
    * @param      {Command}  command  The command
    */
-  handleDiscordCommands(ctx, args, result, command) {
+  async handleDiscordCommands(ctx, args, result, command) {
     if (command.name == "delete") {
       return this.getSubmission(args[0]).delete();
     }
@@ -61,7 +63,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
    * @param {string} url - Url to be checked against mongodb list
    * @returns {boolean} - The boolean value of whether or not the link is allowed
    */
-  checkUrl(url) {
+  async checkUrl(url) {
     //TODO (Callum) : Add special checking for twitter links
     let domain = new URL(url).hostname
     if (this._linksList.includes(domain)) return false;
@@ -73,13 +75,13 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
    *
    * @param      {snoowrap.submission | snoowrap.comment}  reportedItem  The reported item
    */
-  checkSubmission(reportedItem) {
+  async checkSubmission(reportedItem) {
     const isSubmission = Boolean(reportedItem.comments);
 
       //Run checks on submissions
     if (isSubmission) {
       //TODO (Callum) : Check whether flair is already assigned
-      let linkAllowed = this.checkUrl(reportedItem.url);
+      let linkAllowed = await this.checkUrl(reportedItem.url);
       // Assign bad source flair to invalid sources
       if (!linkAllowed) {
         reportedItem.selectFlair({flair_template_id: process.env.BAD_SOURCE_FLAIR_ID});
