@@ -27,12 +27,29 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
 
     //Discord bot setup
     this.discordBot = new KnicksDiscordBot(process.env.BOT_TOKEN);
+     
+
+  }
+
+  /**
+   * Sets up the discord bot for the reddit bot to use
+   *
+   * @param      {String}  The discord bot token
+   * 
+   */
+  async setUpDiscordBot(token) {
     this.discordBot.initialise(process.env.BOT_TOKEN);
     this.discordBot.commandCollection.on(
-      "ran", async (ctx, args, res, command) => {
-        await this.handleDiscordCommands(ctx, args, res, command);
-      });
+    "ran", async (ctx, args, res, command) => {
+      await this.handleDiscordCommands(ctx, args, res, command);
+    });
+  }
 
+  /**
+   * Set up the snoostorm streams
+   *
+   */
+  async setUpStreams() {
     //Snoostorm streams setup
     this.modQueueStream = new ModQueueStream(this, {
       subreddit,
@@ -42,7 +59,6 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
     this.modQueueStream.on("item", async (submission) => {
       await this.checkSubmission(submission);
     });
-
   }
 
   /**
