@@ -40,6 +40,8 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+mongodb-realm/
+realm-object-server/
 
 # TypeScript v1 declaration files
 typings/
