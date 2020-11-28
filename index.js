@@ -8,7 +8,5 @@ const { connectToDataBase } = require('./database');
 const port = process.env.PORT || 5000;
 
 app.listen(port, async () => {
-  const realm = connectToDataBase().catch((err) => {
-    console.error('Failed', err);
-  });
+  await startReportScan();
 });

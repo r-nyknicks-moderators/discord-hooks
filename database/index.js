@@ -25,14 +25,22 @@ const connectToDataBase = async () => {
   });
 };
 
-const writeSomething = (text) => {
-  Realm.write(() => {
-    const newTask = realmApp.create('Reported_Comment', {
+// const config = {
+//   schema: [schemas.TaskSchema, schemas.UserSchema, schemas.ProjectSchema],
+//   sync: {
+//     user: users.getAuthedUser(),
+//     partitionValue: partitionKey,
+//   },
+// };
+
+const writeSomething = ({ comment_id, username }) => {
+  Realm.write(() =>
+    realmApp.create('Reported_Comment', {
       _id: new BSON.ObjectId(),
-      name: 'go shopping',
-      status: 'open',
-    });
-  });
+      comment_id: comment_id,
+      username: username,
+    }),
+  );
 };
 
-module.exports = { connectToDataBase };
+module.exports = { connectToDataBase, writeSomething };
