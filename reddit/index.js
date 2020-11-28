@@ -107,7 +107,6 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
   }
 }
 
-
 module.exports = {
   KnicksRedditBot
 }

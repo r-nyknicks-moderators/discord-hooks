@@ -20,7 +20,8 @@
     "prettier": "^2.1.2"
   },
   "scripts": {
-    "dev": "nodemon index.js",
+    "dev": "nodemon",
+    "start": "nodemon",
     "logs": "heroku logs --app=nyknicks-reports --tail"
   }
 }
