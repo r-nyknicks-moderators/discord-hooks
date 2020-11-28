@@ -38,7 +38,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
    * 
    */
   async setUpDiscordBot(token) {
-    this.discordBot.initialise(process.env.BOT_TOKEN);
+    this.discordBot.initialise(token);
     this.discordBot.commandCollection.on(
     "ran", async (ctx, args, res, command) => {
       await this.handleDiscordCommands(ctx, args, res, command);
