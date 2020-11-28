@@ -1,6 +1,12 @@
 # Discord-hooks
 
-- [ ] Discord Hooks that fire when things are reported
+- [ ] Add new report to DB
+  - Fire Discord Hook
+- [ ] Update existing Report
+- [ ] Track individual User metrics
+
+Future:
+
 - [ ] Can respond to bot to remove post
 - [ ] Keep track of the username that is reported
 - [ ] Send daily notice of users reported
