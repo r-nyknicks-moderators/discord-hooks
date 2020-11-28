@@ -13,10 +13,12 @@ const refreshToken = process.env.REFRESH_TOKEN;
 const subreddit = process.env.SUBREDDIT;
 const badSourceFlairID = process.env.BAD_SOURCE_FLAIR_ID;
 
-const bot = new KnicksRedditBot(clientId, clientSecret, refreshToken, subreddit)
-bot.setUpStreams();
-bot.setUpDiscordBot(process.env.BOT_TOKEN);
+
 
 app.listen(port, async () => {
+  const bot = new KnicksRedditBot(clientId, clientSecret, refreshToken, subreddit)
+  bot.setUpStreams();
+  bot.setUpDiscordBot(process.env.BOT_TOKEN);
+  
   console.log("bot is running...");
 });
