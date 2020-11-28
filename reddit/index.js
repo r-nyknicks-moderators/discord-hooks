@@ -1,6 +1,6 @@
 const snoowrap = require('snoowrap');
 const { KnicksDiscordBot } = require("../discord");
-const { connectToACollection, insertOrUpdateReport } = require('../database');
+const { insertOrUpdateReport } = require('../database');
 
 const {
   CLIENT_ID: clientId,
@@ -15,6 +15,11 @@ const reddit = new snoowrap({
   clientSecret,
   refreshToken,
 });
+
+//Temporary until database is set up
+const linksList = [
+
+]
 
 /**
  * Function to handle the commands the discord bot is given
