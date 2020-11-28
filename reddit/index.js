@@ -1,6 +1,7 @@
 const snoowrap = require('snoowrap');
 const { SubmissionStream, CommentStream, ModQueueStream } = require("snoostorm");
 const { KnicksDiscordBot } = require("../discord");
+const { insertOrUpdateReport } = require("../database")
 
 const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
  /**
