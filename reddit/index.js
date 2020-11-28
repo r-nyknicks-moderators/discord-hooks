@@ -26,7 +26,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
     this._linksList = []
 
     //Discord bot setup
-    this.discordBot = new KnicksDiscordBot(process.env.BOT_TOKEN);
+    this.discordBot = new KnicksDiscordBot(process.env.BOT_PREFIX);
      
 
   }
