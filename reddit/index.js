@@ -1,11 +1,12 @@
 const snoowrap = require('snoowrap');
-const { connectToDataBase } = require('../database');
+const { connectToACollection, insertOrUpdateReport } = require('../database');
 
-// const { fireNewReportHook } = require('../discord');
-const clientId = process.env.CLIENT_ID;
-const clientSecret = process.env.CLIENT_SECRET;
-const refreshToken = process.env.REFRESH_TOKEN;
-const subreddit = process.env.SUBREDDIT;
+const {
+  CLIENT_ID: clientId,
+  CLIENT_SECRET: clientSecret,
+  REFRESH_TOKEN: refreshToken,
+  SUBREDDIT: subreddit,
+} = process.env;
 
 const reddit = new snoowrap({
   userAgent: 'knicksbot',
@@ -19,27 +20,25 @@ const reddit = new snoowrap({
  * @param {array} modqueue - Array of items that need to be moderated
  */
 const checkForNewReports = async (modqueue) => {
-  return new Promise(async (resolve, reject) => {
-    console.log(modqueue.length);
-    await connectToDataBase()
-      .then(() => {
-        return resolve(console.log(modqueue[0]));
-      })
-      .catch((err) => {
-        return reject(console.error(err));
-      });
+  // console.log(JSON.stringify(modqueue));
+  modqueue.forEach(async (report) => {
+    console.log(reddit.getUser(report.author.name));
+    // await insertOrUpdateReport({
+    //   ...report,
+    //   isComment: Boolean(report.body),
+    // });
   });
 };
-
-checkForNewReports.catch((err) => false);
 
 /**
  * Starts the scan process of checking for new reported items
  */
 const startReportScan = async () => {
-  const modqueue = await reddit.getSubreddit(subreddit).getModqueue();
-  if (modqueue.length > 0) return resolve(await checkForNewReports(modqueue));
-  return checkForNewReports.catch();
+  return new Promise(async (resolve, reject) => {
+    const modqueue = await reddit.getSubreddit(subreddit).getModqueue();
+    if (modqueue.length > 0) return resolve(await checkForNewReports(modqueue));
+    return reject();
+  });
 };
 
 module.exports = {

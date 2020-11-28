@@ -41,6 +41,7 @@ build/Release
 node_modules/
 jspm_packages/
 mongodb-realm/
+realm-object-server/
 
 # TypeScript v1 declaration files
 typings/
