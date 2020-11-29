@@ -1,48 +1,58 @@
 const snoowrap = require('snoowrap');
-const { SubmissionStream, CommentStream, ModQueueStream } = require("snoostorm");
-const { KnicksDiscordBot } = require("../discord");
-const { insertOrUpdateReport } = require("../database")
+const {
+  SubmissionStream,
+  CommentStream,
+  ModQueueStream,
+} = require('snoostorm');
+const { KnicksDiscordBot } = require('../discord');
+const { insertOrUpdateReport } = require('../database');
 
 const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
- /**
-  * Constructs a new instance.
-  *
-  * @param      {string}  clientId                 The client identifier
-  * @param      {string}  clientSecret             The client secret
-  * @param      {string}  refreshToken             The refresh token
-  * @param      {string}  [userAgent="knicksbot"]  The user agent
-  */
-  constructor (clientId, clientSecret, refreshToken, subreddit, userAgent = "knicksbot") {
+  /**
+   * Constructs a new instance.
+   *
+   * @param      {string}  clientId                 The client identifier
+   * @param      {string}  clientSecret             The client secret
+   * @param      {string}  refreshToken             The refresh token
+   * @param      {string}  [userAgent="knicksbot"]  The user agent
+   */
+  constructor(
+    clientId,
+    clientSecret,
+    refreshToken,
+    subreddit,
+    userAgent = 'knicksbot',
+  ) {
     super({
       userAgent,
       clientId,
       clientSecret,
-      refreshToken
+      refreshToken,
     });
 
     this.subreddit = subreddit;
 
     //Temporary until database set up
-    this._linksList = []
+    this._linksList = [];
 
     //Discord bot setup
     this.discordBot = new KnicksDiscordBot(process.env.BOT_PREFIX);
-     
-
   }
 
   /**
    * Sets up the discord bot for the reddit bot to use
    *
    * @param      {String}  The discord bot token
-   * 
+   *
    */
   async setUpDiscordBot(token) {
     this.discordBot.initialise(token);
     this.discordBot.commandCollection.on(
-    "ran", async (ctx, args, res, command) => {
-      await this.handleDiscordCommands(ctx, args, res, command);
-    });
+      'ran',
+      async (ctx, args, res, command) => {
+        await this.handleDiscordCommands(ctx, args, res, command);
+      },
+    );
   }
 
   /**
@@ -54,9 +64,9 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
     this.modQueueStream = new ModQueueStream(this, {
       subreddit,
       limit: 50,
-      pollTime: 2000
+      pollTime: 2000,
     });
-    this.modQueueStream.on("item", async (submission) => {
+    this.modQueueStream.on('item', async (submission) => {
       await this.checkSubmission(submission);
     });
   }
@@ -70,7 +80,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
    * @param      {Command}  command  The command
    */
   async handleDiscordCommands(ctx, args, result, command) {
-    if (command.name == "delete") {
+    if (command.name == 'delete') {
       return this.getSubmission(args[0]).delete();
     }
   }
@@ -82,7 +92,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
    */
   async checkUrl(url) {
     //TODO (Callum) : Add special checking for twitter links
-    let domain = new URL(url).hostname
+    let domain = new URL(url).hostname;
     if (this._linksList.includes(domain)) return false;
     return true;
   }
@@ -95,35 +105,38 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
   async checkSubmission(reportedItem) {
     const isSubmission = Boolean(reportedItem.comments);
 
-      //Run checks on submissions
+    //Run checks on submissions
     if (isSubmission) {
       //TODO (Callum) : Check whether flair is already assigned
       let linkAllowed = await this.checkUrl(reportedItem.url);
       // Assign bad source flair to invalid sources
       if (!linkAllowed) {
-        reportedItem.selectFlair({flair_template_id: process.env.BAD_SOURCE_FLAIR_ID});
-        this.discordBot.channels.cache.get(process.env.BOT_SEND_CHANNEL)
-        .send({"embed": {
-          title:"Bad source found",
-          url: `https://reddit.com${reportedItem.permalink}`,
-          description: "A post with a bad source has been reported",
-          fields: [
-          {
-            name: "Url reported:",
-            value: reportedItem.url
+        reportedItem.selectFlair({
+          flair_template_id: process.env.BAD_SOURCE_FLAIR_ID,
+        });
+        this.discordBot.channels.cache.get(process.env.BOT_SEND_CHANNEL).send({
+          embed: {
+            title: 'Bad source found',
+            url: `https://reddit.com${reportedItem.permalink}`,
+            description: 'A post with a bad source has been reported',
+            fields: [
+              {
+                name: 'Url reported:',
+                value: reportedItem.url,
+              },
+              {
+                name: 'Post ID',
+                value: reportedItem.id,
+              },
+            ],
+            timestamp: new Date(reportedItem.created_utc * 1000),
           },
-          {
-            name: "Post ID",
-            value: reportedItem.id
-          }
-          ],
-          timestamp: new Date(reportedItem.created_utc * 1000)
-        }});
-      }    
-    }    
+        });
+      }
+    }
   }
-}
+};
 
 module.exports = {
-  KnicksRedditBot
-}
+  KnicksRedditBot,
+};
