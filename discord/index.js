@@ -23,7 +23,7 @@ const KnicksDiscordBot = class KnicksDiscordBot extends NodeJSBot {
    * @param      {snoowrap.Submission}   submission  The reported post
    * @param      {string}   reason                      The reason for report
    * @param      {Channel}   [channel=this.sendChannel]  The channel to send post to
-   * @return     {Promise}  { description_of_the_return_value }
+   * @return     {Promise}  { True if successful }
    */
   async sendReportedPost(submission, reason, channel = this.sendChannel) {
       if (!channel) {
@@ -49,9 +49,17 @@ const KnicksDiscordBot = class KnicksDiscordBot extends NodeJSBot {
           }
       });
 
+      return true;
+
   }
 
+  /**
+   * 
+   * @param      {string}   id      The id of the discord channel
+   * @return     {Promise}  { returns the channel }
+   */
   async assignSendChannel(id) {
+      if (!this.loaded) return false;
       this.sendChannel = this.channels.cache.get(id);
       return this.sendChannel;
   }
