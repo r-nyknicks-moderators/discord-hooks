@@ -9,7 +9,7 @@ const { insertOrUpdateReport } = require('../database');
 
 const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
   /**
-   * Constructs a new instance.
+   * Creates a new KnicksRedditBot
    *
    * @param      {string}  clientId                 The client identifier
    * @param      {string}  clientSecret             The client secret
@@ -53,6 +53,9 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
         await this.handleDiscordCommands(ctx, args, res, command);
       },
     );
+    this.discordBot.once("ready", () => {
+      this.discordBot.assignSendChannel(process.env.BOT_SEND_CHANNEL);     
+    });
   }
 
   /**
@@ -62,7 +65,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
   async setUpStreams() {
     //Snoostorm streams setup
     this.modQueueStream = new ModQueueStream(this, {
-      subreddit,
+      subreddit: this.subreddit,
       limit: 50,
       pollTime: 2000,
     });
@@ -114,24 +117,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
         reportedItem.selectFlair({
           flair_template_id: process.env.BAD_SOURCE_FLAIR_ID,
         });
-        this.discordBot.channels.cache.get(process.env.BOT_SEND_CHANNEL).send({
-          embed: {
-            title: 'Bad source found',
-            url: `https://reddit.com${reportedItem.permalink}`,
-            description: 'A post with a bad source has been reported',
-            fields: [
-              {
-                name: 'Url reported:',
-                value: reportedItem.url,
-              },
-              {
-                name: 'Post ID',
-                value: reportedItem.id,
-              },
-            ],
-            timestamp: new Date(reportedItem.created_utc * 1000),
-          },
-        });
+        await this.discordBot.sendReportedPost(reportedItem, "Disallowed URL");
       }
     }
   }
