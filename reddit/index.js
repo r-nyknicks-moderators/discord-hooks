@@ -59,7 +59,8 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
       },
     );
     this.discordBot.once('ready', () => {
-      this.discordBot.assignSendChannel(this._config.sendReportChannel);
+      this.discordBot.assignSendChannel(
+        this._config.channels.reportChannel);
     });
   }
 
@@ -99,9 +100,17 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
    * @returns {boolean} - The boolean value of whether or not the link is allowed
    */
   async checkUrl(url) {
-    //TODO (Callum) : Add special checking for twitter links
-    let domain = new URL(url).hostname;
-    if (this._linksList.includes(domain)) return false;
+    let newUrl = new URL(url);
+
+    //Special checking for twitter users
+    if (newUrl.hostname == "twitter.com") {
+      if (this._linksList.includes(
+        `${newUrl.hostname}/${newUrl.pathname.split("/")}`)){
+        return false;
+      }
+    }
+
+    if (this._linksList.includes(newUrl.hostname)) return false;
     return true;
   }
 
@@ -120,7 +129,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
       // Assign bad source flair to invalid sources
       if (!linkAllowed) {
         reportedItem.selectFlair({
-          flair_template_id: this._config.flairs.badSourceFlairID,
+          flair_template_id: this._config.flairs.badSource,
         });
         await this.discordBot.sendReportedPost(reportedItem, 'Disallowed URL');
       }
