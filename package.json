@@ -2,7 +2,7 @@
   "name": "slack-hooks",
   "version": "1.1.0",
   "main": "index.js",
-  "repository": "git@github.com:r-nyknicks-moderators/slack-hooks.git",
+  "repository": "git@github.com:r-nyknicks-moderators/discord-hooks.git",
   "author": "Brendan <eggers.brendan@gmail.com>",
   "license": "MIT",
   "dependencies": {
@@ -16,12 +16,15 @@
   },
   "devDependencies": {
     "eslint": "^6.8.0",
+    "husky": "^5.0.4",
     "nodemon": "^2.0.6",
-    "prettier": "^2.1.2"
+    "prettier": "^2.1.2",
+    "pretty-quick": "^3.1.0"
   },
   "scripts": {
     "dev": "nodemon",
-    "start": "nodemon",
-    "logs": "heroku logs --app=nyknicks-reports --tail"
+    "start": "node index.js",
+    "logs": "heroku logs --app=nyknicks-reports --tail",
+    "prettier": "pretty-quick --staged"
   }
 }
