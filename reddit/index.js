@@ -53,8 +53,8 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
         await this.handleDiscordCommands(ctx, args, res, command);
       },
     );
-    this.discordBot.once("ready", () => {
-      this.discordBot.assignSendChannel(process.env.BOT_SEND_CHANNEL);     
+    this.discordBot.once('ready', () => {
+      this.discordBot.assignSendChannel(process.env.BOT_SEND_CHANNEL);
     });
   }
 
@@ -117,7 +117,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
         reportedItem.selectFlair({
           flair_template_id: process.env.BAD_SOURCE_FLAIR_ID,
         });
-        await this.discordBot.sendReportedPost(reportedItem, "Disallowed URL");
+        await this.discordBot.sendReportedPost(reportedItem, 'Disallowed URL');
       }
     }
   }
