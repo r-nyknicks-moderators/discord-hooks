@@ -22,7 +22,6 @@
     "pretty-quick": "^3.1.0"
   },
   "scripts": {
-    "postinstall": "husky install",
     "dev": "nodemon",
     "start": "node index.js",
     "logs": "heroku logs --app=nyknicks-reports --tail",
