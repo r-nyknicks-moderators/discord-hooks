@@ -21,7 +21,7 @@
   },
   "scripts": {
     "dev": "nodemon",
-    "start": "nodemon",
+    "start": "node index.js",
     "logs": "heroku logs --app=nyknicks-reports --tail"
   }
 }
