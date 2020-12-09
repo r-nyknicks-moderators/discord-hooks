@@ -17,7 +17,6 @@
   "devDependencies": {
     "eslint": "^6.8.0",
     "husky": "^5.0.4",
-    "lint-staged": "^10.5.3",
     "nodemon": "^2.0.6",
     "prettier": "^2.1.2",
     "pretty-quick": "^3.1.0"
@@ -27,7 +26,6 @@
     "dev": "nodemon",
     "start": "node index.js",
     "logs": "heroku logs --app=nyknicks-reports --tail",
-    "lint": "npm-run-all lint:* -p",
     "prettier": "pretty-quick --staged"
   }
 }
