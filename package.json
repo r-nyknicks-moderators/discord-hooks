@@ -16,12 +16,25 @@
   },
   "devDependencies": {
     "eslint": "^6.8.0",
+    "husky": "^4.3.5",
+    "lint-staged": "^10.5.3",
     "nodemon": "^2.0.6",
     "prettier": "^2.1.2"
   },
   "scripts": {
     "dev": "nodemon",
     "start": "node index.js",
-    "logs": "heroku logs --app=nyknicks-reports --tail"
+    "logs": "heroku logs --app=nyknicks-reports --tail",
+    "lint:prettier": "prettier --write './**/*.js'"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "{reddit,discord,database}/**/*.{js,json,md}": [
+      "prettier"
+    ]
   }
 }
