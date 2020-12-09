@@ -25,16 +25,12 @@
     "dev": "nodemon",
     "start": "node index.js",
     "logs": "heroku logs --app=nyknicks-reports --tail",
+    "lint": "npm-run-all lint:* -p",
     "prettier": "prettier --check './**/*.js'"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "npm run prettier"
     }
-  },
-  "lint-staged": {
-    "**/*.{js,json,md}": [
-      "prettier"
-    ]
   }
 }
