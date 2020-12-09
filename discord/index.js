@@ -14,6 +14,7 @@ const KnicksDiscordBot = class KnicksDiscordBot extends NodeJSBot {
       this.commandCollection.loadCommands(process.cwd() + '/discord/commands');
       console.log('Discord Bot ready...');
     });
+
   }
 
   /**
@@ -25,41 +26,42 @@ const KnicksDiscordBot = class KnicksDiscordBot extends NodeJSBot {
    * @return     {Promise}  { True if successful }
    */
   async sendReportedPost(submission, reason, channel = this.sendChannel) {
-    if (!channel) {
-      return false;
-    }
+      if (!channel) {
+          return false;
+      }
 
-    channel.send({
-      embed: {
-        title: 'Reported post',
-        url: `https://reddit.com${submission.permalink}`,
-        description: reason,
-        fields: [
-          {
-            name: 'URL post links to',
-            value: submission.url,
-          },
-          {
-            name: 'Post ID',
-            value: submission.id,
-          },
-        ],
-        timestamp: new Date(submission.created_utc * 1000),
-      },
-    });
+      channel.send({
+          embed: {
+              title: "Reported post",
+              url: `https://reddit.com${submission.permalink}`,
+              description: reason,
+              fields:[
+                  {
+                      name: "URL post links to",
+                      value: submission.url
+                  },
+                  {
+                      name: "Post ID",
+                      value: submission.id
+                  }
+              ],
+              timestamp: new Date(submission.created_utc * 1000)
+          }
+      });
 
-    return true;
+      return true;
+
   }
 
   /**
-   *
+   * 
    * @param      {string}   id      The id of the discord channel
    * @return     {Promise}  { returns the channel }
    */
   async assignSendChannel(id) {
-    if (!this.loaded) return false;
-    this.sendChannel = this.channels.cache.get(id);
-    return this.sendChannel;
+      if (!this.loaded) return false;
+      this.sendChannel = this.channels.cache.get(id);
+      return this.sendChannel;
   }
 };
 
