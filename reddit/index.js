@@ -96,22 +96,14 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
 
   /**
    * Checks the url against allowed urls
-   * @param {string} url - Url to be checked against mongodb list
+   * @param {string} url - Url to be checked
    * @returns {boolean} - The boolean value of whether or not the link is allowed
    */
   async checkUrl(url) {
-    let newUrl = new URL(url);
-
-    //Special checking for twitter users
-    if (newUrl.hostname == "twitter.com") {
-      if (this._linksList.includes(
-        `${newUrl.hostname}/${newUrl.pathname.split("/")}`)){
-        return false;
-      }
+    for (link in this._config.unallowedLinks) {
+      if (url.includes(link)) return false;
     }
-
-    if (this._linksList.includes(newUrl.hostname)) return false;
-    return true;
+    return true
   }
 
   /**
