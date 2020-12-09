@@ -28,7 +28,6 @@ const KnicksDiscordBot = class KnicksDiscordBot extends NodeJSBot {
     if (!channel) {
       return false;
     }
-    console.log('here');
 
     channel.send({
       embed: {
