@@ -14,6 +14,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
    * @param      {string}  clientId                 The client identifier
    * @param      {string}  clientSecret             The client secret
    * @param      {string}  refreshToken             The refresh token
+   * @param      {Object} config                    The config of the reddit bot
    * @param      {string}  [userAgent="knicksbot"]  The user agent
    */
   constructor(
@@ -21,6 +22,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
     clientSecret,
     refreshToken,
     subreddit,
+    config,
     userAgent = 'knicksbot',
   ) {
     super({
@@ -32,11 +34,14 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
 
     this.subreddit = subreddit;
 
+    //Bot config
+    this._config = config;
+
     //Temporary until database set up
-    this._linksList = [];
+    this._linksList = config.unallowedLinks;
 
     //Discord bot setup
-    this.discordBot = new KnicksDiscordBot(process.env.BOT_PREFIX);
+    this.discordBot = new KnicksDiscordBot(config.botPrefix);
   }
 
   /**
@@ -53,8 +58,8 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
         await this.handleDiscordCommands(ctx, args, res, command);
       },
     );
-    this.discordBot.once("ready", () => {
-      this.discordBot.assignSendChannel(process.env.BOT_SEND_CHANNEL);     
+    this.discordBot.once('ready', () => {
+      this.discordBot.assignSendChannel(this._config.sendReportChannel);
     });
   }
 
@@ -115,9 +120,9 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
       // Assign bad source flair to invalid sources
       if (!linkAllowed) {
         reportedItem.selectFlair({
-          flair_template_id: process.env.BAD_SOURCE_FLAIR_ID,
+          flair_template_id: this._config.flairs.badSourceFlairID,
         });
-        await this.discordBot.sendReportedPost(reportedItem, "Disallowed URL");
+        await this.discordBot.sendReportedPost(reportedItem, 'Disallowed URL');
       }
     }
   }

@@ -1,17 +1,21 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const { KnicksRedditBot } = require('./reddit');
+const config = require('./config');
+
 const app = express();
 dotenv.config();
-const { KnicksRedditBot } = require('./reddit');
 
 const port = process.env.PORT || 5000;
 
 //Bot setup
-const clientId = process.env.CLIENT_ID;
-const clientSecret = process.env.CLIENT_SECRET;
-const refreshToken = process.env.REFRESH_TOKEN;
-const subreddit = process.env.SUBREDDIT;
-const badSourceFlairID = process.env.BAD_SOURCE_FLAIR_ID;
+const {
+  clientId: CLIENT_ID,
+  clientSecret: CLIENT_SECRET,
+  refreshToken: REFRESH_TOKEN,
+  subreddit: SUBREDDIT,
+  botToken: BOT_TOKEN,
+} = process.env;
 
 app.listen(port, async () => {
   const bot = new KnicksRedditBot(
@@ -19,9 +23,10 @@ app.listen(port, async () => {
     clientSecret,
     refreshToken,
     subreddit,
+    config,
   );
   bot.setUpStreams();
-  bot.setUpDiscordBot(process.env.BOT_TOKEN);
+  bot.setUpDiscordBot(botToken);
 
   console.log('bot is running...');
 });
