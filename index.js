@@ -10,23 +10,23 @@ const port = process.env.PORT || 5000;
 
 //Bot setup
 const {
-  clientId: CLIENT_ID,
-  clientSecret: CLIENT_SECRET,
-  refreshToken: REFRESH_TOKEN,
-  subreddit: SUBREDDIT,
-  botToken: BOT_TOKEN,
+  CLIENT_ID,
+  CLIENT_SECRET,
+  REFRESH_TOKEN,
+  SUBREDDIT,
+  BOT_TOKEN,
 } = process.env;
 
 app.listen(port, async () => {
   const bot = new KnicksRedditBot(
-    clientId,
-    clientSecret,
-    refreshToken,
-    subreddit,
+    CLIENT_ID,
+    CLIENT_SECRET,
+    REFRESH_TOKEN,
+    SUBREDDIT,
     config,
   );
   bot.setUpStreams();
-  bot.setUpDiscordBot(botToken);
+  bot.setUpDiscordBot(BOT_TOKEN);
 
   console.log('bot is running...');
 });
