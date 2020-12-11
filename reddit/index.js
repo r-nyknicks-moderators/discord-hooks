@@ -14,6 +14,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
    * @param      {string}  clientId                 The client identifier
    * @param      {string}  clientSecret             The client secret
    * @param      {string}  refreshToken             The refresh token
+   * @param      {Object} config                    The config of the reddit bot
    * @param      {string}  [userAgent="knicksbot"]  The user agent
    */
   constructor(
@@ -21,6 +22,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
     clientSecret,
     refreshToken,
     subreddit,
+    config,
     userAgent = 'knicksbot',
   ) {
     super({
@@ -30,13 +32,16 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
       refreshToken,
     });
 
+    //Discord bot setup
+    this.discordBot = new KnicksDiscordBot(config.botPrefix);
+
     this.subreddit = subreddit;
 
-    //Temporary until database set up
-    this._linksList = [];
+    //Bot config
+    this._botConfig = config;
 
-    //Discord bot setup
-    this.discordBot = new KnicksDiscordBot(process.env.BOT_PREFIX);
+    //Temporary until database set up
+    this._linksList = config.unallowedLinks;
   }
 
   /**
@@ -54,7 +59,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
       },
     );
     this.discordBot.once('ready', () => {
-      this.discordBot.assignSendChannel(process.env.BOT_SEND_CHANNEL);
+      this.discordBot.assignSendChannel(this._botConfig.channels.reportChannel);
     });
   }
 
@@ -90,13 +95,13 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
 
   /**
    * Checks the url against allowed urls
-   * @param {string} url - Url to be checked against mongodb list
+   * @param {string} url - Url to be checked
    * @returns {boolean} - The boolean value of whether or not the link is allowed
    */
   async checkUrl(url) {
-    //TODO (Callum) : Add special checking for twitter links
-    let domain = new URL(url).hostname;
-    if (this._linksList.includes(domain)) return false;
+    for (let link of this._botConfig.disallowedLinks) {
+      if (url.includes(link)) return false;
+    }
     return true;
   }
 
@@ -107,19 +112,20 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
    */
   async checkSubmission(reportedItem) {
     const isSubmission = Boolean(reportedItem.comments);
-
     //Run checks on submissions
     if (isSubmission) {
-      //TODO (Callum) : Check whether flair is already assigned
-      let linkAllowed = await this.checkUrl(reportedItem.url);
       // Assign bad source flair to invalid sources
-      if (!linkAllowed) {
+      if (
+        !(await this.checkUrl(reportedItem.url)) &&
+        reportedItem.link_flair_template_id != this._botConfig.flairs.badSource
+      ) {
         reportedItem.selectFlair({
-          flair_template_id: process.env.BAD_SOURCE_FLAIR_ID,
+          flair_template_id: this._botConfig.flairs.badSource,
         });
-        await this.discordBot.sendReportedPost(reportedItem, 'Disallowed URL');
+        await this.discordBot.sendReportedPost(reportedItem, "Disallowed URL");
       }
     }
+
   }
 };
 
