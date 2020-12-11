@@ -32,16 +32,16 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
       refreshToken,
     });
 
+    //Discord bot setup
+    this.discordBot = new KnicksDiscordBot(config.botPrefix);
+
     this.subreddit = subreddit;
 
     //Bot config
-    this._config = config;
+    this._botConfig = config;
 
     //Temporary until database set up
     this._linksList = config.unallowedLinks;
-
-    //Discord bot setup
-    this.discordBot = new KnicksDiscordBot(config.botPrefix);
   }
 
   /**
@@ -59,8 +59,7 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
       },
     );
     this.discordBot.once('ready', () => {
-      this.discordBot.assignSendChannel(
-        this._config.channels.reportChannel);
+      this.discordBot.assignSendChannel(this._botConfig.channels.reportChannel);
     });
   }
 
@@ -100,10 +99,10 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
    * @returns {boolean} - The boolean value of whether or not the link is allowed
    */
   async checkUrl(url) {
-    for (link in this._config.unallowedLinks) {
+    for (let link of this._botConfig.disallowedLinks) {
       if (url.includes(link)) return false;
     }
-    return true
+    return true;
   }
 
   /**
@@ -113,19 +112,20 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
    */
   async checkSubmission(reportedItem) {
     const isSubmission = Boolean(reportedItem.comments);
-
     //Run checks on submissions
     if (isSubmission) {
-      //TODO (Callum) : Check whether flair is already assigned
-      let linkAllowed = await this.checkUrl(reportedItem.url);
       // Assign bad source flair to invalid sources
-      if (!linkAllowed) {
+      if (
+        !(await this.checkUrl(reportedItem.url)) &&
+        reportedItem.link_flair_template_id != this._botConfig.flairs.badSource
+      ) {
         reportedItem.selectFlair({
-          flair_template_id: this._config.flairs.badSource,
+          flair_template_id: this._botConfig.flairs.badSource,
         });
-        await this.discordBot.sendReportedPost(reportedItem, 'Disallowed URL');
+        await this.discordBot.sendReportedPost(reportedItem, "Disallowed URL");
       }
     }
+
   }
 };
 
