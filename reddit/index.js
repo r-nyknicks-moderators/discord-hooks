@@ -75,7 +75,16 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
       pollTime: 2000,
     });
     this.modQueueStream.on('item', async (submission) => {
-      await this.checkSubmission(submission);
+      await this.checkReportedSubmission(submission);
+    });
+
+    this.newQueueStream = new SubmissionStream(this, {
+      subreddit: this.subreddit,
+      limit: 50,
+      pollTime: 2000,
+    });
+    this.newQueueStream.on('item', async (submission) => {
+      await this.checkNewSubmission(submission);
     });
   }
 
@@ -99,33 +108,55 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
    * @returns {boolean} - The boolean value of whether or not the link is allowed
    */
   async checkUrl(url) {
-    for (let link of this._botConfig.disallowedLinks) {
-      if (url.includes(link)) return false;
+    for (let type in this._botConfig.disallowedLinks) {
+      for (let link of this._botConfig.disallowedLinks[type].links) {
+        if (url.includes(link)) return [false, type];
+      }
     }
-    return true;
+    return [true, null];
   }
 
   /**
-   * Checks all submissions
+   * Checks new submissions
+   *
+   * @param      {snoowrap.Submission}   submission  The submission
+   *
+   */
+  async checkNewSubmission(submission) {
+    //Check if source is dissallowed
+    const [allowed, linkType] = await this.checkUrl(submission.url);
+    if (
+      !allowed &&
+      submission.link_flair_template_id != this._botConfig.flairs.badSource
+    ) {
+      await this.discordBot.sendReportedPost(submission, 'Disallowed URL');
+      //Deal with post in response to the type of link
+      switch (linkType) {
+        case 'streams':
+          await submission.reply(
+            this._botConfig.disallowedLinks[linkType].reply,
+          );
+          await submission.remove();
+          break;
+        case 'badSource':
+          await submission.selectFlair({
+            flair_template_id: this._botConfig.flairs.badSource,
+          });
+          break;
+      }
+    }
+  }
+
+  /**
+   * Checks reported submissions
    *
    * @param      {snoowrap.submission | snoowrap.comment}  reportedItem  The reported item
    */
-  async checkSubmission(reportedItem) {
+  async checkReportedSubmission(reportedItem) {
     const isSubmission = Boolean(reportedItem.comments);
     //Run checks on submissions
     if (isSubmission) {
-      // Assign bad source flair to invalid sources
-      if (
-        !(await this.checkUrl(reportedItem.url)) &&
-        reportedItem.link_flair_template_id != this._botConfig.flairs.badSource
-      ) {
-        reportedItem.selectFlair({
-          flair_template_id: this._botConfig.flairs.badSource,
-        });
-        await this.discordBot.sendReportedPost(reportedItem, "Disallowed URL");
-      }
     }
-
   }
 };
 
