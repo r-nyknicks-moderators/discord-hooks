@@ -78,12 +78,12 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
       await this.checkReportedSubmission(submission);
     });
 
-    this.newQueueStream = new SubmissionStream(this, {
+    this.submissionStream = new SubmissionStream(this, {
       subreddit: this.subreddit,
       limit: 50,
       pollTime: 2000,
     });
-    this.newQueueStream.on('item', async (submission) => {
+    this.submissionStream.on('item', async (submission) => {
       await this.checkNewSubmission(submission);
     });
   }
