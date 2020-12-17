@@ -131,11 +131,9 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
     ) {
       await this.discordBot.sendReportedPost(submission, 'Disallowed URL');
       //Deal with post in response to the type of link
+      await submission.reply(this._botConfig.disallowedLinks[linkType].reply);
       switch (linkType) {
         case 'streams':
-          await submission.reply(
-            this._botConfig.disallowedLinks[linkType].reply,
-          );
           await submission.remove();
           break;
         case 'badSource':
