@@ -8,6 +8,7 @@ module.exports = class GetUser extends Command {
 
   async _run(ctx, args) {
     const user = await getUser(args[0]);
+    //TODO(Callum): Parse results
     console.log(user);
     ctx.channel.send(`\`\`\`${JSON.stringify(user)}\`\`\``);
   }
