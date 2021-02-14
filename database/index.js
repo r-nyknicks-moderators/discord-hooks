@@ -18,41 +18,21 @@ const insertOrUpdateReport = async ({
   user_reports,
   mod_reports,
 }) => {
-  //Set up post vars
-  // const isSubmission = Boolean(comments);
-  // const reports = user_reports.length + mod_reports.length;
-  // const name = author.name;
-  // const post = { id, isSubmission, reports}
-  // //Update user reports
-  // const collection = await client.db(SUBREDDIT).collection('user');
-  // const user = await collection.findOne({ name });
-  // if (user) {
-  //   const dbPost = user.reportedPosts.find( (o, i) => {
-  //     if (o.id == id) {
-  //       user.reportedPosts[i] = post;
-  //       return true;
-  //     }
-  //   });
-  //   if (!dbPost) user.reportedPosts.push(post);
-  //   await collection.replaceOne({ name }, user, (err, res) =>
-  //     console.log(err, res),
-  //   );
-  // }
-  // else {
-  //   const newUser = {
-  //     name,
-  //     reportedPosts: [ post ]
-  //   }
-  //   await collection.insertOne(newUser, (err, res) =>
-  //     console.log(err, res),
-  //   );
-  // }
-  // return true;
+  const isSubmission = Boolean(comments);
+  const reports = user_reports.length + mod_reports.length;
+  const collection = client.db(SUBREDDIT).collection('reports');
+  //Overwrite old entries
+  await collection.deleteMany({ id });
+  await collection.insertOne(
+    { id, author: author.name, isSubmission, reports },
+    (err, res) => console.log(err, res),
+  );
+  return true;
 };
 
-const getUser = async (name) => {
-  const collection = await client.db(SUBREDDIT).collection('user');
-  return await collection.findOne({ name });
+const getUser = async (author) => {
+  const collection = await client.db(SUBREDDIT).collection('reports');
+  return await collection.find({ author });
 };
 
 module.exports = { insertOrUpdateReport, getUser };
