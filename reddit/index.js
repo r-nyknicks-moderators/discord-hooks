@@ -152,9 +152,12 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
    */
   async checkReportedSubmission(reportedItem) {
     const isSubmission = Boolean(reportedItem.comments);
+
     //Run checks on submissions
     if (isSubmission) {
     }
+    const result = await insertOrUpdateReport(reportedItem);
+    await this.discordBot.sendReportedPost(reportedItem, 'Modqueue');
   }
 };
 
