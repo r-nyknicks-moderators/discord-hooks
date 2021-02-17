@@ -11,6 +11,19 @@ const client = new MongoClient(uri, {
 //Connection has to stay open otherwise JS gets upset
 client.connect();
 
+//TODO(Callum): check for connection before running
+
+/**
+ * Add or change a reported post in the mongodb
+ *
+ * @param      {snoowrap.Submission}   Reported post              The argument 1
+ * @param      {string}   post.id            The identifier
+ * @param      {string}   post.author        The author
+ * @param      {string}   post.comments      The comments
+ * @param      {Array}   post.user_reports  The user reports
+ * @param      {Array}   post.mod_reports   The modifier reports
+ * @return     {boolean}  { true on complete }
+ */
 const insertOrUpdateReport = async ({
   id,
   author,
@@ -18,6 +31,7 @@ const insertOrUpdateReport = async ({
   user_reports,
   mod_reports,
 }) => {
+  //setup vars
   const isSubmission = Boolean(comments);
   const reports = user_reports.length + mod_reports.length;
   const collection = client.db(SUBREDDIT).collection('reports');
@@ -30,9 +44,15 @@ const insertOrUpdateReport = async ({
   return true;
 };
 
+/**
+ * Gets the users posts from the db
+ *
+ * @param      {string}  author  The author
+ * @return     {Array}  The users posts.
+ */
 const getUser = async (author) => {
   const collection = await client.db(SUBREDDIT).collection('reports');
-  return await collection.find({ author });
+  return await collection.find({ author }).toArray();
 };
 
 module.exports = { insertOrUpdateReport, getUser };
