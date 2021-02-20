@@ -2,13 +2,13 @@
 
 - [x] Add new report to DB
   - Fire Discord Hook
-- [ ] Update existing Report
+- [x] Update existing Report
 - [ ] Track individual User metrics
 
 Future:
 
 - [x] Can respond to bot to remove post
-- [ ] Keep track of the username that is reported
+- [x] Keep track of the username that is reported
 - [ ] Send daily notice of users reported
 - [x] Check for bad comments
 - [ ] Trade posts will alert us. Eventually can check the quality of the trade
