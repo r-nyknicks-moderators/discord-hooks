@@ -33,6 +33,7 @@ module.exports = {
         'jefans.com',
         'papahd.cc',
         'soccerjumbotv4.me',
+        'https://streambible.org',
       ],
       reply: `Stream links are not allowed on this site.
          Please DM the user that asked and refrain from posting the link to the subreddit.`,

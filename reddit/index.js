@@ -131,11 +131,9 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
     ) {
       await this.discordBot.sendReportedPost(submission, 'Disallowed URL');
       //Deal with post in response to the type of link
+      await submission.reply(this._botConfig.disallowedLinks[linkType].reply);
       switch (linkType) {
         case 'streams':
-          await submission.reply(
-            this._botConfig.disallowedLinks[linkType].reply,
-          );
           await submission.remove();
           break;
         case 'badSource':
@@ -152,8 +150,14 @@ const KnicksRedditBot = class KnicksRedditBot extends snoowrap {
    *
    * @param      {snoowrap.submission | snoowrap.comment}  reportedItem  The reported item
    */
-  async checkReportedSubmission(submission) {
-    await this.discordBot.sendReportedPost(submission, 'Newly Reported Post');
+  async checkReportedSubmission(reportedItem) {
+    const isSubmission = Boolean(reportedItem.comments);
+
+    //Run checks on submissions
+    if (isSubmission) {
+    }
+    const result = await insertOrUpdateReport(reportedItem);
+    await this.discordBot.sendReportedPost(reportedItem, 'Modqueue');
   }
 };
 
